@@ -1,0 +1,230 @@
+/* Firefox Bottom Address Bar with Content Above and URL Suggestions Above Address Bar */
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+/* Main window layout - flex to control ordering */
+#main-window {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Move navigator toolbox (tabs, address bar) to bottom */
+#navigator-toolbox {
+  order: 2 !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 1000 !important;
+  background: var(--toolbar-bgcolor) !important;
+  border-top: 1px solid var(--chrome-content-separator-color) !important;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.1) !important;
+}
+
+/* Content area stays at top and fills space */
+#appcontent {
+  order: 1 !important;
+  flex: 1 !important;
+  margin-bottom: 80px !important; /* Space for bottom toolbar */
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Browser content area adjustments */
+#browser {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100vh !important;
+  position: relative !important;
+}
+
+#tabbrowser-tabpanels {
+  order: 1 !important;
+  flex: 1 !important;
+  margin-bottom: 80px !important; /* Space for tabs + address bar */
+  position: relative !important;
+  z-index: 1 !important;
+  height: calc(100vh - 80px) !important;
+}
+
+/* Ensure web content fills available space above toolbars */
+.browserContainer {
+  height: 100% !important;
+}
+
+#tabbrowser-tabbox {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Tabs are now visible at the bottom along with the address bar */
+#TabsToolbar {
+  /* visibility: collapse !important; */
+}
+
+/* Address bar styling at bottom */
+#nav-bar {
+  background: var(--toolbar-bgcolor) !important;
+  border: none !important;
+  padding: 8px 8px 0px 8px !important; /* Remove bottom padding */
+}
+
+#urlbar-container {
+  flex: 1 !important;
+  margin: 0 8px !important;
+}
+
+#urlbar {
+  background: var(--toolbar-field-background-color) !important;
+  border: 1px solid var(--toolbar-field-border-color) !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+}
+
+/* Hide search dropdown icon completely */
+#urlbar-searchmode-switcher {
+  display: none !important;
+}
+
+/* Ensure search one-offs stay with address bar */
+.search-one-offs,
+#PopupSearchAutoComplete .search-one-offs {
+  position: fixed !important;
+  bottom: 50px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 1002 !important;
+  background: var(--arrowpanel-background) !important;
+  border: 1px solid var(--arrowpanel-border-color) !important;
+  border-radius: 0 0 8px 8px !important;
+  margin: 0 !important;
+}
+
+/* Fix any floating search elements */
+.search-panel-one-offs,
+#search-one-offs {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+/* CRITICAL: URL suggestions appear ABOVE the bottom address bar */
+#urlbar-results {
+  position: fixed !important;
+  bottom: 50px !important; /* Above the address bar */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(600px, 90vw) !important;
+  z-index: 1001 !important;
+  background: var(--arrowpanel-background) !important;
+  border: 1px solid var(--arrowpanel-border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.2) !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  margin: 0 !important;
+}
+
+/* URL suggestion item styling */
+.urlbarView-row {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--panel-separator-color) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.urlbarView-row:last-child {
+  border-bottom: none !important;
+}
+
+.urlbarView-row:hover {
+  background: var(--arrowpanel-dimmed) !important;
+}
+
+.urlbarView-row[selected] {
+  background: var(--autocomplete-popup-highlight-background) !important;
+  color: var(--autocomplete-popup-highlight-color) !important;
+}
+
+/* Hide window controls in title bar since we moved toolbars */
+#titlebar {
+  display: none !important;
+}
+
+/* Ensure all popup menus appear above bottom bar */
+menupopup,
+.autocomplete-richlistbox,
+#PopupAutoComplete {
+  margin-bottom: 80px !important;
+  z-index: 1002 !important;
+}
+
+/* Fix floating search elements - force them to stay in address bar area */
+#searchbar,
+.searchbar-engine-image,
+.searchbar-engine-menuitem,
+.search-go-button,
+.urlbar-engine-one-off-item {
+  position: relative !important;
+  margin-bottom: 0 !important;
+  bottom: auto !important;
+  top: auto !important;
+}
+
+/* Target the specific floating dropdown you're seeing */
+panel[type="autocomplete-richlistbox"],
+.autocomplete-richlistbox-popup {
+  position: fixed !important;
+  bottom: 50px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 1003 !important;
+}
+
+/* Fix for fullscreen mode */
+#main-window[inFullscreen] #navigator-toolbox {
+  display: none !important;
+}
+
+#main-window[inFullscreen] #appcontent {
+  margin-bottom: 0 !important;
+}
+
+#main-window[inFullscreen] #tabbrowser-tabpanels {
+  margin-bottom: 0 !important;
+}
+
+/* Additional rules to ensure content stays above bottom toolbars */
+#main-window {
+  overflow: hidden !important;
+}
+
+/* Force content to stay in upper area */
+browser[type="content"] {
+  margin-bottom: 80px !important;
+  height: calc(100vh - 80px) !important;
+}
+
+/* Ensure iframe and embedded content respects boundaries */
+iframe,
+embed,
+object {
+  max-height: calc(100vh - 100px) !important;
+}
+
+/* Force all content containers to respect bottom margin */
+#content,
+.browserStack {
+  margin-bottom: 80px !important;
+  max-height: calc(100vh - 80px) !important;
+}
+
+/* Optional: Hide back/forward buttons for cleaner look */
+/*
+#back-button,
+#forward-button {
+  display: none !important;
+}
+*/
